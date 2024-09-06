@@ -1,5 +1,5 @@
 {
-  "name": "ejs",
+  "name": "ejs-client",
   "description": "Embedded JavaScript templates",
   "keywords": [
     "template",
@@ -17,10 +17,10 @@
   "unpkg": "ejs.min.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mde/ejs.git"
+    "url": "git://github.com/trucdev/ejs.git"
   },
-  "bugs": "https://github.com/mde/ejs/issues",
-  "homepage": "https://github.com/mde/ejs",
+  "bugs": "https://github.com/trucdev/ejs/issues",
+  "homepage": "https://github.com/trucdev/ejs",
   "dependencies": {
     "jake": "^10.8.5"
   },
