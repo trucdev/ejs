@@ -58,7 +58,7 @@ suite('client mode', function () {
     var fn;
     var str;
     var preFn;
-    fn = ejs.compile('<p><%= foo %></p>', {client: true});
+    fn = ejs.compile('<p><%= locals.foo %></p>', {client: true});
     str = fn.toString();
     if (!process.env.running_under_istanbul) {
       eval('var preFn = ' + str);
@@ -94,7 +94,7 @@ suite('client mode', function () {
     customEscape = function customEscape(str) {
       return !str ? '' : str.toUpperCase();
     };
-    fn = ejs.compile('HELLO <%= name %>', {escape: customEscape, client: true});
+    fn = ejs.compile('HELLO <%= locals.name %>', {escape: customEscape, client: true});
     str = fn.toString();
     if (!process.env.running_under_istanbul) {
       eval('var preFn = ' + str);
@@ -113,7 +113,7 @@ suite('client mode', function () {
 /* Old API -- remove when this shim goes away */
 suite('ejs.render(str, dataAndOpts)', function () {
   test('render the template with data/opts passed together', function () {
-    assert.equal(ejs.render('<p><?= foo ?></p>', {foo: 'yay', delimiter: '?'}),
+    assert.equal(ejs.render('<p><?= locals.foo ?></p>', {foo: 'yay', delimiter: '?'}),
       '<p>yay</p>');
   });
 
@@ -159,7 +159,7 @@ suite('ejs.render(str, data, opts)', function () {
   });
 
   test('accept locals', function () {
-    assert.equal(ejs.render('<p><%= name %></p>', {name: 'geddy'}),
+    assert.equal(ejs.render('<p><%= locals.name %></p>', {name: 'geddy'}),
       '<p>geddy</p>');
   });
 
@@ -186,7 +186,7 @@ suite('ejs.render(str, data, opts)', function () {
   });
 
   test('support caching', function () {
-    var result = ejs.render('<p><%= name %></p>', {name: 'geddy'}, {cache: true, filename: 'test'});
+    var result = ejs.render('<p><%= locals.name %></p>', {name: 'geddy'}, {cache: true, filename: 'test'});
     assert.equal(result, '<p>geddy</p>');
 
     var func = ejs.cache.get('test');
@@ -203,22 +203,22 @@ suite('<%', function () {
 
 suite('<%=', function () {
   test('should not throw an error with a // comment on the final line', function () {
-    assert.equal(ejs.render('<%=\n// a comment\nname\n// another comment %>', {name: '&nbsp;<script>'}),
+    assert.equal(ejs.render('<%=\n// a comment\nlocals.name\n// another comment %>', {name: '&nbsp;<script>'}),
       '&amp;nbsp;&lt;script&gt;');
   });
 
   test('escape &amp;<script>', function () {
-    assert.equal(ejs.render('<%= name %>', {name: '&nbsp;<script>'}),
+    assert.equal(ejs.render('<%= locals.name %>', {name: '&nbsp;<script>'}),
       '&amp;nbsp;&lt;script&gt;');
   });
 
   test('should escape \'', function () {
-    assert.equal(ejs.render('<%= name %>', {name: 'The Jones\'s'}),
+    assert.equal(ejs.render('<%= locals.name %>', {name: 'The Jones\'s'}),
       'The Jones&#39;s');
   });
 
   test('should escape &foo_bar;', function () {
-    assert.equal(ejs.render('<%= name %>', {name: '&foo_bar;'}),
+    assert.equal(ejs.render('<%= locals.name %>', {name: '&foo_bar;'}),
       '&amp;foo_bar;');
   });
 
@@ -229,7 +229,7 @@ suite('<%=', function () {
     };
 
     assert.equal(
-      ejs.render('<%= name %>', {name: 'The Jones\'s'}, {escape: customEscape}),
+      ejs.render('<%= locals.name %>', {name: 'The Jones\'s'}, {escape: customEscape}),
       'THE JONES\'S'
     );
   });
@@ -237,12 +237,12 @@ suite('<%=', function () {
 
 suite('<%-', function () {
   test('should not throw an error with a // comment on the final line', function () {
-    assert.equal(ejs.render('<%-\n// a comment\nname\n// another comment %>', {name: '&nbsp;<script>'}),
+    assert.equal(ejs.render('<%-\n// a comment\nlocals.name\n// another comment %>', {name: '&nbsp;<script>'}),
       '&nbsp;<script>');
   });
 
   test('not escape', function () {
-    assert.equal(ejs.render('<%- name %>', {name: '<script>'}),
+    assert.equal(ejs.render('<%- locals.name %>', {name: '<script>'}),
       '<script>');
   });
 
@@ -292,7 +292,7 @@ suite('-%>', function () {
 
   test('works with unix style', function () {
     var content = '<ul><% -%>\n'
-    + '<% users.forEach(function(user){ -%>\n'
+    + '<% locals.users.forEach(function(user){ -%>\n'
     + '<li><%= user.name -%></li>\n'
     + '<% }) -%>\n'
     + '</ul><% -%>\n';
@@ -306,7 +306,7 @@ suite('-%>', function () {
 
   test('works with windows style', function () {
     var content = '<ul><% -%>\r\n'
-    + '<% users.forEach(function(user){ -%>\r\n'
+    + '<% locals.users.forEach(function(user){ -%>\r\n'
     + '<li><%= user.name -%></li>\r\n'
     + '<% }) -%>\r\n'
     + '</ul><% -%>\r\n';
