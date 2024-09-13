@@ -1,27 +1,7 @@
-Embedded JavaScript templates<br/>
-[![Known Vulnerabilities](https://snyk.io/test/npm/ejs/badge.svg?style=flat)](https://snyk.io/test/npm/ejs)
-=============================
-
-## Security
-
-Security professionals, before reporting any security issues, please reference the
-<a href="https://github.com/mde/ejs/blob/main/SECURITY.md">SECURITY.md</a>
-in this project, in particular, the following: "EJS is effectively a JavaScript runtime.
-Its entire job is to execute JavaScript. If you run the EJS render method without
-checking the inputs yourself, you are responsible for the results."
-
-In short, DO NOT submit 'vulnerabilities' that include this snippet of code:
-
-```javascript
-app.get('/', (req, res) => {
-  res.render('index', req.query);
-});
-```
-
 ## Installation
 
 ```bash
-$ npm install ejs
+$ npm install ejs-client-only
 ```
 
 ## Features
@@ -32,17 +12,14 @@ $ npm install ejs
   * Newline-trim mode ('newline slurping') with `-%>` ending tag
   * Whitespace-trim mode (slurp all whitespace) for control flow with `<%_ _%>`
   * Custom delimiters (e.g. `[? ?]` instead of `<% %>`)
-  * Includes
   * Client-side support
-  * Static caching of intermediate JavaScript
-  * Static caching of templates
-  * Complies with the [Express](http://expressjs.com) view system
+  * Running only with strict mode. Read ejs document with strict is true
 
 ## Example
 
 ```ejs
-<% if (user) { %>
-  <h2><%= user.name %></h2>
+<% if (locals.user) { %>
+  <h2><%= locals.user.name %></h2>
 <% } %>
 ```
 
@@ -182,55 +159,7 @@ ejs.render('<p>[?= users.join(" | "); ?]</p>', {users: users});
 // => '<p>geddy | neil | alex</p>'
 ```
 
-### Caching
-
-EJS ships with a basic in-process cache for caching the intermediate JavaScript
-functions used to render templates. It's easy to plug in LRU caching using
-Node's `lru-cache` library:
-
-```javascript
-let ejs = require('ejs'),
-    LRU = require('lru-cache');
-ejs.cache = LRU(100); // LRU cache with 100-item limit
-```
-
-If you want to clear the EJS cache, call `ejs.clearCache`. If you're using the
-LRU cache and need a different limit, simple reset `ejs.cache` to a new instance
-of the LRU.
-
-### Custom file loader
-
-The default file loader is `fs.readFileSync`, if you want to customize it, you can set ejs.fileLoader.
-
-```javascript
-let ejs = require('ejs');
-let myFileLoad = function (filePath) {
-  return 'myFileLoad: ' + fs.readFileSync(filePath);
-};
-
-ejs.fileLoader = myFileLoad;
-```
-
-With this feature, you can preprocess the template before reading it.
-
-### Layouts
-
-EJS does not specifically support blocks, but layouts can be implemented by
-including headers and footers, like so:
-
-
-```ejs
-<%- include('header') -%>
-<h1>
-  Title
-</h1>
-<p>
-  My page
-</p>
-<%- include('footer') -%>
-```
-
-## Client-side support
+## Client-side support ONLY WORK WITH strict mode
 
 Go to the [Latest Release](https://github.com/mde/ejs/releases/latest), download
 `./ejs.js` or `./ejs.min.js`. Alternately, you can compile it yourself by cloning
@@ -271,82 +200,6 @@ Most of EJS will work as expected; however, there are a few things to note:
     // Return the contents of file as a string
   }); // returns rendered string
   ```
-
-See the [examples folder](https://github.com/mde/ejs/tree/master/examples) for more details.
-
-## CLI
-
-EJS ships with a full-featured CLI. Options are similar to those used in JavaScript code:
-
-  - `-o / --output-file FILE`            Write the rendered output to FILE rather than stdout.
-  - `-f / --data-file FILE`              Must be JSON-formatted. Use parsed input from FILE as data for rendering.
-  - `-i / --data-input STRING`           Must be JSON-formatted and URI-encoded. Use parsed input from STRING as data for rendering.
-  - `-m / --delimiter CHARACTER`         Use CHARACTER with angle brackets for open/close (defaults to %).
-  - `-p / --open-delimiter CHARACTER`    Use CHARACTER instead of left angle bracket to open.
-  - `-c / --close-delimiter CHARACTER`   Use CHARACTER instead of right angle bracket to close.
-  - `-s / --strict`                      When set to `true`, generated function is in strict mode
-  - `-n / --no-with`                     Use 'locals' object for vars rather than using `with` (implies --strict).
-  - `-l / --locals-name`                 Name to use for the object storing local variables when not using `with`.
-  - `-w / --rm-whitespace`               Remove all safe-to-remove whitespace, including leading and trailing whitespace.
-  - `-d / --debug`                       Outputs generated function body
-  - `-h / --help`                        Display this help message.
-  - `-V/v / --version`                   Display the EJS version.
-
-Here are some examples of usage:
-
-```shell
-$ ejs -p [ -c ] ./template_file.ejs -o ./output.html
-$ ejs ./test/fixtures/user.ejs name=Lerxst
-$ ejs -n -l _ ./some_template.ejs -f ./data_file.json
-```
-
-### Data input
-
-There is a variety of ways to pass the CLI data for rendering.
-
-Stdin:
-
-```shell
-$ ./test/fixtures/user_data.json | ejs ./test/fixtures/user.ejs
-$ ejs ./test/fixtures/user.ejs < test/fixtures/user_data.json
-```
-
-A data file:
-
-```shell
-$ ejs ./test/fixtures/user.ejs -f ./user_data.json
-```
-
-A command-line option (must be URI-encoded):
-
-```shell
-./bin/cli.js -i %7B%22name%22%3A%20%22foo%22%7D ./test/fixtures/user.ejs
-```
-
-Or, passing values directly at the end of the invocation:
-
-```shell
-./bin/cli.js -m $ ./test/fixtures/user.ejs name=foo
-```
-
-### Output
-
-The CLI by default send output to stdout, but you can use the `-o` or `--output-file`
-flag to specify a target file to send the output to.
-
-## IDE Integration with Syntax Highlighting
-
-VSCode:Javascript EJS by *DigitalBrainstem*
-
-## Related projects
-
-There are a number of implementations of EJS:
-
- * TJ's implementation, the v1 of this library: https://github.com/tj/ejs
- * EJS Embedded JavaScript Framework on Google Code: https://code.google.com/p/embeddedjavascript/
- * Sam Stephenson's Ruby implementation: https://rubygems.org/gems/ejs
- * Erubis, an ERB implementation which also runs JavaScript: http://www.kuwata-lab.com/erubis/users-guide.04.html#lang-javascript
- * DigitalBrainstem EJS Language support: https://github.com/Digitalbrainstem/ejs-grammar
 
 ## License
 

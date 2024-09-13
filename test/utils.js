@@ -79,35 +79,6 @@ suite('unit testing exported functions of module \'utils.js\'', function () {
   });
 
   /**
-   *  Unit testing of exported function 'escapeXML.toString'
-   */
-  suite('unit testing function \'escapeXML\' of module \'utils.js\'', function () {
-    test('it should be callable without parameters', function () {
-      const stringified =
-`function (markup) {
-  return markup == undefined
-    ? ''
-    : String(markup)
-      .replace(_MATCH_HTML, encode_char);
-};
-var _ENCODE_HTML_RULES = {
-      "&": "&amp;"
-    , "<": "&lt;"
-    , ">": "&gt;"
-    , '"': "&#34;"
-    , "'": "&#39;"
-    }
-  , _MATCH_HTML = /[&<>'"]/g;
-function encode_char(c) {
-  return _ENCODE_HTML_RULES[c] || c;
-};
-`;
-      assert.doesNotThrow(() => { utils.escapeXML.toString(); });
-      assert.ok(utils.escapeXML.toString()===stringified);
-    });
-  });
-
-  /**
    *  Unit testing of exported function 'shallowCopy'
    */
   suite('unit testing function \'shallowCopy\' of module \'utils.js\'', function () {

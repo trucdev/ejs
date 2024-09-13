@@ -1,12 +1,13 @@
 {
   "name": "ejs-client-only",
-  "description": "Embedded JavaScript templates",
+  "description": "Embedded JavaScript templates for client-side rendering with EJS support for React Native",
   "keywords": [
     "template",
     "engine",
-    "ejs"
+    "ejs",
+    "react-native"
   ],
-  "version": "3.1.10.c-1",
+  "version": "1.0.0",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "license": "Apache-2.0",
   "bin": {
