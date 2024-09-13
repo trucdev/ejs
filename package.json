@@ -1,5 +1,5 @@
 {
-  "name": "ejs-client-only",
+  "name": "react-native-ejs",
   "description": "Embedded JavaScript templates for client-side rendering with EJS support for React Native",
   "keywords": [
     "template",

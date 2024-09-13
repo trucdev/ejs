@@ -1,11 +1,11 @@
 ## Installation
 
 ```bash
-$ npm install ejs-client-only
+$ npm install react-native-ejs
 ```
 
 ## Features
-
+  * Support React native
   * Control flow with `<% %>`
   * Escaped output with `<%= %>` (escape function configurable)
   * Unescaped raw output with `<%- %>`
